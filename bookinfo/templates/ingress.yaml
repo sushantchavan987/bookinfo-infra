@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bookinfo-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  # - host: bookinfo.local  <-- DELETED THIS LINE
+  - http:                 # <-- Moved this to the left (same level as 'rules')
+      paths:
+      - path: /productpage
+        pathType: Prefix
+        backend:
+          service:
+            name: productpage
+            port:
+              number: 9080
+      - path: /static
+        pathType: Prefix
+        backend:
+          service:
+            name: productpage
+            port:
+              number: 9080
+      - path: /login
+        pathType: Prefix
+        backend:
+          service:
+            name: productpage
+            port:
+              number: 9080
+      - path: /logout
+        pathType: Prefix
+        backend:
+          service:
+            name: productpage
+            port:
+              number: 9080
