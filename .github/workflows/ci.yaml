@@ -1,0 +1,32 @@
+name: Helm Chart CI
+
+# 1. THE TRIGGER: Run this only when code is pushed to 'main'
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      # Step A: Download the code from the repo
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step B: Install Helm tool on the runner
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.11.1
+
+      # Step C: The "Grammar Check" (Lint)
+      # Checks for indentation errors, missing values, or bad YAML syntax
+      - name: Helm Lint
+        run: helm lint ./bookinfo
+
+      # Step D: The "Logic Check" (Dry Run)
+      # Tries to generate the YAML to verify templates don't crash
+      - name: Helm Template (Dry Run)
+        run: helm template bookinfo ./bookinfo
